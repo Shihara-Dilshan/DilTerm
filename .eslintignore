@@ -1,4 +1,6 @@
 app/components/Home.tsx
+app/components/Input.tsx
+app/components/Result.tsx
 
 # Logs
 logs

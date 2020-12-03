@@ -9,13 +9,20 @@ body {
   color: white;
   height: 100vh;
   background-color: #000;
-  font-family: Arial, Helvetica, Helvetica Neue, serif;
-  overflow-y: hidden;
+  font-family: monospace;
+  overflow-y: auto;
+  font-style: monospace;
 }
 
 * {
   margin: 0;
   padding: 0;
+  margin-left: 1px;
+}
+
+input {
+  font-family: monospace;
+  font-style: monospace;
 }
 
 input:focus {

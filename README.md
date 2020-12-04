@@ -15,7 +15,7 @@
 First, clone the repo via git:
 
 ```bash
-git clone --depth 1 --single-branch --branch master https://github.com/electron-react-boilerplate/electron-react-boilerplate.git your-project-name
+git clone https://github.com/Shihara-Dilshan/DilTerm
 ```
 
 ## !!!!IMPORTANT!!!!

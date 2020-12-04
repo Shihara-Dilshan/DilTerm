@@ -2,11 +2,11 @@ import React, { Component } from "react";
 const { exec } = require("child_process");
 
 
-class Input extends Component<{}, { command: String, results: String[] }> {
+class Input extends Component<{}, { command: String, results: String[], currentWD: String }> {
 
     constructor(props: Object) {
         super(props);
-        this.state = { command: "", results: [] };
+        this.state = { command: "", results: [], currentWD: "/" };
     }
 
     test = (e: React.MouseEvent<HTMLButtonElement>): void => {
@@ -20,23 +20,45 @@ class Input extends Component<{}, { command: String, results: String[] }> {
     };
 
     finalFunc = (e: React.KeyboardEvent<FormControl>): void => {
+        
+        const options: Object = {
+           cwd: localStorage.getItem("cwd") === null ? this.state.currentWD : localStorage.getItem("cwd").replace("/",""),
+           env: null,
+           encording: 'utf-8',
+           timeout: 0,
+           maxBuffer: 200*1024,
+           killSignal: 'SIGTERM'
+        
+        };
+        
         if (e.key === "Enter") {
-            if (this.state.command.length !== 0) {
-                exec(`${this.state.command}`.trim(), (error, stdout, stderr) => {
+            if (this.state.command.length !== 0 && this.state.command !== "clear" && !this.state.command.includes("history")) {
+                exec(`${this.state.command}`.trim(), options ,(error, stdout, stderr) => {
                     if(stdout){
                        let view: Array = stdout.split(`\n`);
-                       this.setState({ results: view });                    
+                       this.setState({ results: view });   
+                       return;                  
                     }else if(stderr){
                        let view: Array = [];
                        view.push(stderr);
-                       this.setState({ results: view });    
+                       this.setState({ results: view });   
+                       return; 
                     }else if(error){
                        let view: Array = [];
                        view.push(stderr);
-                       this.setState({ results: view });  
+                       this.setState({ results: view }); 
+                       return; 
                     }
                     
+                    let CCommand: String[] = this.state.command.split(" ");
+                    CCommand.shift();
+                    console.log(CCommand);
+                    let currentCWD = this.state.currentWD;
+                    this.setState({currentWD: `${currentCWD}/${CCommand[0]}`});
+                    localStorage.setItem("cwd", this.state.currentWD);
+                    
                 });
+                
 
             }
         }
@@ -58,7 +80,7 @@ class Input extends Component<{}, { command: String, results: String[] }> {
             <div>
                 <div style={this.styleLine()}>
 
-                    <h3 style={{ color: "red" }}>root@dilbash:~# </h3>
+                    <h3 style={{ color: "#00c853" }}>root@dilbash<span style={{ color: "white" }}>:</span><span style={{ color: "#03a9f4" }}>{localStorage.getItem("cwd") !== null ? localStorage.getItem("cwd").replace("/","~") : "/"}</span><span style={{ color: "white" }}>$</span> </h3>
                     {" "}<input autoFocus style={{ height: "2em", fontSize: "15px", marginLeft: "1%", width: "90%", color: "white", backgroundColor: "black", outLine: "none", border: "none" }} type="text" onChange={this.execute} value={command} onKeyUp={this.finalFunc} />
                 </div>
                 {results.map((result, index) => <h4 key={index}>{result}</h4>)}

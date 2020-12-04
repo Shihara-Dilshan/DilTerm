@@ -17,8 +17,10 @@ class Home extends Component<{}, { inputs: JSX.Element[] }> {
            if(e.key === "Enter"){
                let currentCount: JSX.Element[] = this.state.inputs;
                currentCount.push(<Input />);
-               this.setState({inputs: currentCount});
-               
+               setTimeout( ():void => {
+                   this.setState({inputs: currentCount});
+               }, 100);
+              
            }
        });
     

@@ -6,7 +6,7 @@ class Input extends Component<{}, { command: String, results: String[], currentW
 
     constructor(props: Object) {
         super(props);
-        this.state = { command: "", results: [], currentWD: "/" };
+        this.state = { command: "", results: [], currentWD: localStorage.getItem("cwd") === null ? "/" : localStorage.getItem("cwd") };
     }
 
     test = (e: React.MouseEvent<HTMLButtonElement>): void => {
@@ -22,7 +22,7 @@ class Input extends Component<{}, { command: String, results: String[], currentW
     finalFunc = (e: React.KeyboardEvent<FormControl>): void => {
         
         const options: Object = {
-           cwd: localStorage.getItem("cwd") === null ? this.state.currentWD : localStorage.getItem("cwd").replace("/",""),
+           cwd: localStorage.getItem("cwd") === null ? this.state.currentWD : localStorage.getItem("cwd"),
            env: null,
            encording: 'utf-8',
            timeout: 0,
@@ -31,7 +31,9 @@ class Input extends Component<{}, { command: String, results: String[], currentW
         
         };
         
+        
         if (e.key === "Enter") {
+            console.log(options.cwd);
             if (this.state.command.length !== 0 && this.state.command !== "clear" && !this.state.command.includes("history")) {
                 exec(`${this.state.command}`.trim(), options ,(error, stdout, stderr) => {
                     if(stdout){
@@ -50,12 +52,24 @@ class Input extends Component<{}, { command: String, results: String[], currentW
                        return; 
                     }
                     
-                    let CCommand: String[] = this.state.command.split(" ");
+                 
+                    if(this.state.command === "cd ~" || this.state.command === "cd"){
+                    this.setState({currentWD: "/"});    
+                    localStorage.setItem("cwd", "/");
+                    return;
+                    }
+                    
+                    if(this.state.command.includes("cd")){
+                        let CCommand: String[] = this.state.command.split(" ");
                     CCommand.shift();
-                    console.log(CCommand);
+
                     let currentCWD = this.state.currentWD;
+                    console.log(currentCWD);
                     this.setState({currentWD: `${currentCWD}/${CCommand[0]}`});
                     localStorage.setItem("cwd", this.state.currentWD);
+                    
+                    }
+                    
                     
                 });
                 
@@ -80,8 +94,8 @@ class Input extends Component<{}, { command: String, results: String[], currentW
             <div>
                 <div style={this.styleLine()}>
 
-                    <h3 style={{ color: "#00c853" }}>root@dilbash<span style={{ color: "white" }}>:</span><span style={{ color: "#03a9f4" }}>{localStorage.getItem("cwd") !== null ? localStorage.getItem("cwd").replace("/","~") : "/"}</span><span style={{ color: "white" }}>$</span> </h3>
-                    {" "}<input autoFocus style={{ height: "2em", fontSize: "15px", marginLeft: "1%", width: "90%", color: "white", backgroundColor: "black", outLine: "none", border: "none" }} type="text" onChange={this.execute} value={command} onKeyUp={this.finalFunc} />
+                    <h3 style={{ color: "#00c853" }}>root@dilbash<span style={{ color: "white" }}>:</span><span style={{ color: "#03a9f4" }}>{localStorage.getItem("cwd") !== null ? localStorage.getItem("cwd").replace("/", "") : "~"}</span><span style={{ color: "white" }}>$</span> </h3>
+                    {" "}<input autoFocus style={{ height: "2em", fontSize: "15px", marginLeft: "1%", width: "90%", color: "white", backgroundColor: "#212121", outLine: "none", border: "none" }} type="text" onChange={this.execute} value={command} onKeyUp={this.finalFunc} />
                 </div>
                 {results.map((result, index) => <h4 key={index}>{result}</h4>)}
 		

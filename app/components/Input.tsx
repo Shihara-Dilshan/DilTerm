@@ -102,7 +102,7 @@ class Input extends Component<{}, { command: String, results: String[], currentW
             <div>
                 <div style={this.styleLine()}>
 
-                    <h3 style={{ color: "#00c853" }}>root@dilbash<span style={{ color: "white" }}>:</span><span style={{ color: "#03a9f4" }}>{localStorage.getItem("cwd") !== null ? localStorage.getItem("cwd").replace("/", "") : "~"}</span><span style={{ color: "white" }}>$</span> </h3>
+                    <h3 style={{ color: "#00c853" }}>root@DilTerm<span style={{ color: "white" }}>:</span><span style={{ color: "#03a9f4" }}>{localStorage.getItem("cwd") !== null ? localStorage.getItem("cwd").replace("/", "") : "~"}</span><span style={{ color: "white" }}>$</span> </h3>
                     {" "}<input autoFocus style={{ height: "2em", fontSize: "15px", marginLeft: "1%", width: "90%", color: "white", backgroundColor: "#212121", outLine: "none", border: "none" }} type="text" onChange={this.execute} value={command} onKeyUp={this.finalFunc} />
                 </div>
                 {results.map((result, index) => <h4 key={index}>{result}</h4>)}

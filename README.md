@@ -4,7 +4,7 @@
 
 <div align="center">
 
-![Electron Boilerplate Demo](https://raw.githubusercontent.com/Shihara-Dilshan/img/master/about.gif)
+![Electron Boilerplate Demo](https://raw.githubusercontent.com/Shihara-Dilshan/DilBash/master/view.gif)
 
 </div>
 

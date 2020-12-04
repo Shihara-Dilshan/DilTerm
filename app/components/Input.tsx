@@ -35,8 +35,12 @@ class Input extends Component<{}, { command: String, results: String[], currentW
             e.target.setAttribute("disabled", true);
             
             //exit command
-            if(this.state.command === "exit"){
-                
+            if(this.state.command === "help"){
+                exec("./help.sh", (error, stdout, stderr) => {
+                   let view: Array = stdout.split(`\n`);
+                        this.setState({ results: view });
+                        return;
+                });
                 return;
             }
             

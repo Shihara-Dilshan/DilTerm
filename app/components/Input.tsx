@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 const { remote } = require('electron')
-const { app } = remote
+const { app,BrowserWindow } = remote
 
 const { exec, execSync } = require('child_process');
 
@@ -13,6 +13,14 @@ class Input extends Component<{}, { command: string, results: string[], currentW
       currentWD: localStorage.getItem('cwd') === null ? '/' : localStorage.getItem('cwd'),
       systemCommands: ['help',]
     };
+
+  const win = new BrowserWindow({
+    height: 120,
+    width: 400
+  });
+win.loadURL(`file://${__dirname}/me.html`)
+win.setMenuBarVisibility(false)
+
     
   }
 
@@ -27,7 +35,7 @@ class Input extends Component<{}, { command: string, results: string[], currentW
       env: null,
       encoding: 'utf-8',
       timeout: 0,
-      maxBuffer: 2147483647,
+      maxBuffer: 200 * 1024,
       killSignal: 'SIGTERM'
     };
 

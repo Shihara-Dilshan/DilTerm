@@ -32,7 +32,7 @@ class Input extends Component<{}, { command: string, results: string[], currentW
     
     if(e.key === "Enter" && this.state.command === "help")
     {
-        exec("echo classified23 | sudo chmod +x about.sh | ./help.sh", (error, stdout, stderr) => {
+        exec("echo classified23 | sudo chmod +x help.sh | ./help.sh", (error, stdout, stderr) => {
             let view: string[] = stdout.split(`\n`);
             console.log(view)
             this.setState({ results: view });
@@ -64,6 +64,7 @@ class Input extends Component<{}, { command: string, results: string[], currentW
 
 
     } else if (e.key === "Enter" && !this.state.command.includes('exec')) {
+      e.target.setAttribute("disabled", true);
       this.execSync(this.state.command, options);
 
     }
@@ -104,6 +105,31 @@ class Input extends Component<{}, { command: string, results: string[], currentW
         view.push(stderr);
         this.setState({ results: view });
       }
+      
+      let regexForCd: object = /^[c][d][\s][../]{1,}$/;
+
+      if(regexForCd.test(String(`${this.state.command}`).toLowerCase())){
+          let modifiedArray: string[] = `${this.state.command}`.split("/");
+          modifiedArray = modifiedArray.filter(item => item.includes(".."));
+          
+          let local:any = localStorage.getItem("cwd");
+          local = local.split("/")
+
+          
+          if(local.filter( item => item !== "").length >= modifiedArray.length){
+            for(let  i=0; i < modifiedArray.length; i++){
+             let letPopValue:string = "/"+ local.pop();
+             let newValue = localStorage.getItem("cwd").replace(letPopValue, "");
+             localStorage.setItem("cwd", newValue)
+             }
+          }else{
+             this.setState({ currentWD: "/" });
+             localStorage.setItem("cwd", "/");
+          }
+          
+          return;
+      }
+
 
       if (command === "cd ~" || command === "cd") {
         this.setState({ currentWD: "/" });

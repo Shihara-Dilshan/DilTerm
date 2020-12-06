@@ -1,9 +1,5 @@
 import React, { Component } from "react";
-import styles from './Home.css';
-const { exec } = require("child_process");
-
 import Input from './Input';
-
 
 class Home extends Component<{}, { inputs: JSX.Element[] }> {
 
@@ -11,9 +7,11 @@ class Home extends Component<{}, { inputs: JSX.Element[] }> {
         super(props);
         this.state = { inputs: [<Input />] };
     }
-    
+
     componentDidMount():void{
-       document.addEventListener( 'keyup' ,(e) => {
+      localStorage.getItem("cwd") !== null ? localStorage.removeItem("cwd") : null;
+
+      document.addEventListener( 'keyup' ,(e: KeyboardEvent):any => {
            if(e.key === "Enter"){
                let currentCount: JSX.Element[] = this.state.inputs;
                currentCount.push(<Input />);
@@ -23,23 +21,6 @@ class Home extends Component<{}, { inputs: JSX.Element[] }> {
               
            }
        });
-    
-    }
-
-    test = (e: React.MouseEvent<HTMLButtonElement>): void => {
-
-
-    };
-
-    execute = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        let inputValue = e.target.value;
-      
-    };
-
-    finalFunc = (e: React.KeyboardEvent<FormControl>): void => {
-        if (e.key === "Enter") {
-          
-        }
     }
 
     render(): JSX.Element {
@@ -47,8 +28,6 @@ class Home extends Component<{}, { inputs: JSX.Element[] }> {
         return (
             <React.Fragment>
                 {inputs.map( input_Feild => input_Feild )}
-                
-		
             </React.Fragment>
         );
 

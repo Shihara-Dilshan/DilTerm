@@ -4,15 +4,29 @@ const { app,BrowserWindow } = remote
 
 const { exec, execSync } = require('child_process');
 
-class Input extends Component<{}, { command: string, results: string[], currentWD: any, systemCommands: string[] }> {
+class Input extends Component<{}, { command: string, results: string[], currentWD: any, systemCommands: string[], history: string[], reversedHistory: string[], reversedHistoryTemp: string[] }> {
   constructor(props: Object) {
     super(props);
     this.state = {
       command: '',
       results: [],
+      history: [],
+      reversedHistoryTemp: [],
+      reversedHistory: [],
       currentWD: localStorage.getItem('cwd') === null ? '/' : localStorage.getItem('cwd'),
       systemCommands: ['help',]
     };  
+  }
+  
+  componentDidMount():void{
+      if(localStorage.getItem("history") === null){
+          localStorage.setItem("history", JSON.stringify(this.state.history));
+      }
+      
+       if(localStorage.getItem("historyTemp") === null){
+          localStorage.setItem("historyTemp", JSON.stringify(this.state.reversedHistoryTemp));
+      }
+      
   }
 
   execute = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -21,6 +35,22 @@ class Input extends Component<{}, { command: string, results: string[], currentW
   };
 
   finalFunc = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if(e.key === "Enter"){
+       this.setState({ reversedHistoryTemp : [] });
+       localStorage.setItem("historyTemp", JSON.stringify(this.state.reversedHistoryTemp));
+    }
+    let currentHistory: Array<string> =  JSON.parse(localStorage.getItem("history"));
+    
+    if(e.key === "Enter" && this.state.command.length > 0){
+       if(currentHistory.length > 20){
+           currentHistory.shift();
+       }
+    
+    
+       currentHistory.push(this.state.command);
+       localStorage.setItem("history", JSON.stringify(currentHistory));
+    }
+  
     const options: Object = {
       cwd: localStorage.getItem('cwd') === null ? this.state.currentWD : localStorage.getItem('cwd'),
       env: null,
@@ -152,6 +182,32 @@ class Input extends Component<{}, { command: string, results: string[], currentW
       }
     });
   }
+  
+  manageHistory = (e) => {
+      let currentHistoryTemp: Array<string> =  JSON.parse(localStorage.getItem("historyTemp"));
+      if(e.key === "Enter"){
+         e.preventDefault();
+      }else if(e.key === "ArrowUp"){
+         let currentHistory: Array<string> =  JSON.parse(localStorage.getItem("history"));
+         if(currentHistory.length === 0) return
+            
+         let popValue = currentHistory.pop();
+         currentHistory.unshift(popValue);
+         localStorage.setItem("history", JSON.stringify(currentHistory));
+         e.target.value = popValue;
+         
+         currentHistoryTemp.push(popValue);
+         localStorage.setItem("historyTemp", JSON.stringify(currentHistoryTemp));
+      }else if(e.key === "ArrowDown"){
+         if(currentHistoryTemp.length === 0) return
+
+         
+         let popValue = currentHistoryTemp.pop();
+          localStorage.setItem("historyTemp", JSON.stringify(currentHistoryTemp));
+          e.target.value = popValue;
+      }
+      
+  }
 
   render(): JSX.Element {
     const { command, results } = this.state;
@@ -171,7 +227,7 @@ class Input extends Component<{}, { command: string, results: string[], currentW
             color: 'white',
             backgroundColor: '#212121',
             border: 'none'
-          }} type="text" onChange={this.execute} value={command} onKeyUp={this.finalFunc} />
+          }} type="text" onChange={this.execute} value={command} onKeyUp={this.finalFunc} onKeyDown={this.manageHistory}/>
         </div>
         {results.map((result, index) => <h4 key={index}>{result}</h4>)}
 

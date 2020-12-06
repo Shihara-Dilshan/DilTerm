@@ -21,6 +21,8 @@ class Home extends Component<{}, { inputs: JSX.Element[] }> {
               
            }
        });
+    
+ 
     }
 
     render(): JSX.Element {

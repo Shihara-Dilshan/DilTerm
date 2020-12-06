@@ -12,16 +12,7 @@ class Input extends Component<{}, { command: string, results: string[], currentW
       results: [],
       currentWD: localStorage.getItem('cwd') === null ? '/' : localStorage.getItem('cwd'),
       systemCommands: ['help',]
-    };
-
-  const win = new BrowserWindow({
-    height: 120,
-    width: 400
-  });
-win.loadURL(`file://${__dirname}/me.html`)
-win.setMenuBarVisibility(false)
-
-    
+    };  
   }
 
   execute = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -38,6 +29,27 @@ win.setMenuBarVisibility(false)
       maxBuffer: 200 * 1024,
       killSignal: 'SIGTERM'
     };
+    
+    if(e.key === "Enter" && this.state.command === "help")
+    {
+        exec("echo classified23 | sudo chmod +x about.sh | ./help.sh", (error, stdout, stderr) => {
+            let view: string[] = stdout.split(`\n`);
+            console.log(view)
+            this.setState({ results: view });
+        });
+        return;
+    }
+
+    
+    if(e.key === "Enter" && this.state.command === "about")
+    {
+        exec("echo classified23 | sudo chmod +x about.sh | ./about.sh", (error, stdout, stderr) => {
+            let view: string[] = stdout.split(`\n`);
+            console.log(view)
+            this.setState({ results: view });
+        });
+        return;
+    }
 
     if(e.key === "Enter" && this.state.command === "exit")
     {

@@ -175,9 +175,20 @@ export default class MenuBuilder {
           },
         },
         {
-          label: 'Search Issues',
+          label: 'About',
           click() {
-            shell.openExternal('https://github.com/electron/electron/issues');
+              const win = new BrowserWindow({
+      height: 110,
+      width: 400,
+      webPreferences: {
+  devTools: false
+  }
+
+   });
+
+   win.setMenuBarVisibility(false);
+ 
+              win.loadURL(`file://${__dirname}/me.html`);
           },
         },
       ],
@@ -276,9 +287,20 @@ export default class MenuBuilder {
             },
           },
           {
-            label: 'Search Issues',
+            label: 'About',
             click() {
-              shell.openExternal('https://github.com/electron/electron/issues');
+              const win = new BrowserWindow({
+      height: 110,
+      width: 400,
+      webPreferences: {
+  devTools: false
+  }
+
+   });
+
+   win.setMenuBarVisibility(false);
+ 
+              win.loadURL(`file://${__dirname}/me.html`);
             },
           },
         ],

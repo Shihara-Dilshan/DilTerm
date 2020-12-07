@@ -177,6 +177,7 @@ export default class MenuBuilder {
         {
           label: 'About',
           click() {
+              console.log(__dirname)
               const win = new BrowserWindow({
       height: 110,
       width: 400,
@@ -289,6 +290,7 @@ export default class MenuBuilder {
           {
             label: 'About',
             click() {
+              console.log(__dirname)
               const win = new BrowserWindow({
       height: 110,
       width: 400,

@@ -61,4 +61,4 @@ See our [docs and guides here](https://electron-react-boilerplate.js.org/docs/in
 
 ## License
 
-MIT © DilTerm 2020
+MIT © DilTerm 2022

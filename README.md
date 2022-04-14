@@ -1,4 +1,4 @@
-## DilTerm
+## DilTerm.
 
 ![visitors](https://visitor-badge.glitch.me/badge?page_id=dilterm.visitor-badge)
 
